@@ -62,7 +62,6 @@ class Voc:
         result = []
         for word in sentence:
             idx = self.word2idx(word)
-            print(word, idx)
             if idx == UNK_TOKEN:
                 continue
             result.append(idx)
