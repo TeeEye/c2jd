@@ -25,6 +25,7 @@ if __name__ == '__main__':
         print('All data loaded!')
     print('Start data cleaning...')
     app = pd.concat(app_arr, ignore_index=True)
+    app = app.head(TRAIN_SIZE)
     total_len = len(app)
     app.reset_index(drop=True, inplace=True)
     app = app[app['job_description'] != '']
