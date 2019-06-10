@@ -41,8 +41,8 @@ class Solver:
         self.model.train()
         for epoch in range(1, self.n_epochs+1):
             batch_x, batch_y = self.sampler.next_batch()
-            batch_x = torch.FloatTensor(batch_x).to(device)
-            batch_y = torch.FlaotTensor(batch_y).to(device)
+            batch_x = torch.from_numpy(batch_x).to(device)
+            batch_y = torch.from_numpy(batch_y).to(device)
             batch_y_hat = self.model(batch_x)
             loss = self.crit(batch_y_hat, batch_y)
             self.optim.zero_grad()
