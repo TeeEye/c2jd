@@ -10,7 +10,7 @@ class Baseline(nn.Module):
         self.embeds_dim = embeds_dim
         num_word = 48000
         self.embeds = nn.Embedding(num_word, self.embeds_dim)
-        self.lstm = nn.LSTM(self.embeds_dim, self.hidden_size, batch_first=True, bidirectional=True)
+        # self.lstm = nn.LSTM(self.embeds_dim, self.hidden_size, batch_first=True, bidirectional=True)
 
         self.fc = nn.Linear(self.hidden_size * 2, 1)
 
@@ -27,7 +27,7 @@ class Baseline(nn.Module):
         o2, _ = self.lstm(x2)
 
         # Classifier
-        x = (o1 + o2) / 2
+        x = (o1[-1, 0] + o2[-1, 0]) / 2
         x = self.fc(x)
         return F.sigmoid(x)
 
