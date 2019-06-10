@@ -13,12 +13,14 @@ if __name__ == '__main__':
     train_data_path = TRAIN_PATH % current_train_file
 
     # 先将所有数据合并
+    current_count = 0
     with open(raw_data_path, 'rb') as f:
         app_arr = []
-        while True:
+        while current_count < TRAIN_SIZE:
             try:
                 app = pickle.load(f)
                 app_arr.append(app)
+                current_count += len(app)
                 print('Data loaded ', len(app))
             except EOFError:
                 break

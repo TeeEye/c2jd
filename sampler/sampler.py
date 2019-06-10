@@ -12,7 +12,7 @@ sys.path.append('..')
 
 class Sampler:
     def __init__(self, batch_size=BATCH_SIZE, train_test_split=TRAIN_TEST_SPLIT,
-                 data_size=DATA_SIZE, data_path=DATA_PATH):
+                 data_size=DATA_SIZE, data_path=TRAIN_PATH):
         seed = random.randint(0, 1000)
         print("Sampler initiating with seed: %d" % seed)
         random.seed(seed)
