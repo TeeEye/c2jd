@@ -20,8 +20,10 @@ class Sampler:
         _current_data_index = 0  # DATA_PATH 共八个文件, 目前只用第一个文件
         with open(data_path % _current_data_index, 'rb') as data_file:
             self.data = pickle.load(data_file)
-        test = self.data[int(len(self.data)*train_test_split):]
-        self.test_x = np.zeros((len(self.data)-int(len(self.data)*train_test_split)+1, 2, MAX_SENTENCE_LEN))
+        test_start = int(len(self.data) * train_test_split)
+        test = self.data[test_start:]
+        self.test_x = np.zeros((len(self.data)-test_start+1, 2, MAX_SENTENCE_LEN))
+        print('test_x shape:', self.test_x.shape)
         self.test_y = []
         count = 0
         for idx, row in test.iterrows():
