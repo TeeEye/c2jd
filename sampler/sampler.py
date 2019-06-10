@@ -41,8 +41,14 @@ class Sampler:
         print("Sampler initiated!")
 
     def zero_pad(self, inputs):
-        zipped = zip_longest(*inputs, fillvalue=0)
-        return np.concatenate([np.array(z).reshape(1, -1) for z in zipped]).T.astype(np.int64)
+        # zipped = zip_longest(*inputs, fillvalue=0)
+        # return np.concatenate([np.array(z).reshape(1, -1) for z in zipped]).T.astype(np.int64)
+        result = np.zeros(self.batch_size, PAD_SIZE)
+        for index, input in enumerate(inputs):
+            for i in range(min(PAD_SIZE, len(input))):
+                result[index, i] = input[i]
+        return result
+
 
     def next_batch(self):
         start = random.randint(0, int(len(self.summary) * self.train_test_split)-self.batch_size)

@@ -10,8 +10,7 @@ class Baseline(nn.Module):
         self.embeds_dim = embeds_dim
         num_word = 48000
         self.embeds = nn.Embedding(num_word, self.embeds_dim)
-        # self.lstm = nn.LSTM(self.embeds_dim, self.hidden_size, batch_first=True, bidirectional=True)
-
+        self.lstm = nn.LSTM(self.embeds_dim, self.hidden_size, batch_first=True, bidirectional=True)
         self.fc = nn.Linear(self.hidden_size * 2, 1)
 
     def forward(self, *inputs):
