@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 
 class ESIM(nn.Module):
-    def __init__(self, hidden_size, embeds_dim, linear_size):
+    def __init__(self, hidden_size=300, embeds_dim=300, linear_size=300):
         super(ESIM, self).__init__()
         self.dropout = 0.5
         self.hidden_size = hidden_size

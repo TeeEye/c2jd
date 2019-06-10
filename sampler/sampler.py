@@ -5,7 +5,6 @@
 from utils.macros import *
 import sys
 import pickle
-import pandas as pd
 import random
 sys.path.append('..')
 
@@ -18,8 +17,8 @@ class Sampler:
         random.seed(seed)
         _current_data_index = 0  # DATA_PATH 共八个文件, 目前只用第一个文件
         with open(data_path % _current_data_index, 'rb') as data_file:
-            self.data = pd.concat(pickle.load(data_file))
-        self.test = self.data[len(self.data)*train_test_split:]
+            self.data = pickle.load(data_file)
+        self.test = self.data[int(len(self.data)*train_test_split):]
         self.batch_size = batch_size
         print("Sampler initiated!")
 
