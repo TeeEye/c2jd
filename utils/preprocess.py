@@ -20,6 +20,10 @@ if __name__ == '__main__':
         while current_count < TRAIN_SIZE:
             try:
                 app = pickle.load(f)
+                app = app[['candidate_summary', 'job_description', 'job_class_1']]
+                app = app[app['candidate_summary'].str.len > 1]
+                app = app[app['job_description'].str.len > 1]
+                app.dropna(inplace=True)
                 app_arr.append(app)
                 current_count += len(app)
                 print('Data loaded ', len(app))
@@ -28,12 +32,6 @@ if __name__ == '__main__':
         print('All data loaded!')
     print('Start data cleaning...')
     app = pd.concat(app_arr, ignore_index=True)
-    app['job_description'].dropna(inplace=True)
-    app['candidate_summary'].dropna(inplace=True)
-    app = app[app['job_description'] != '']
-    app = app[app['candidate_summary'] != '']
-    app['job_class_1'].dropna(inplace=True)
-    app = app[['candidate_summary', 'job_description', 'job_class_1']]
     app = app.head(TRAIN_SIZE)
     app['label'] = 1
     total_len = len(app)
@@ -67,8 +65,8 @@ if __name__ == '__main__':
     description = []
     voc = Voc()
     for idx, row in app.iterrows():
-        summary.append(voc.sentence2idxs(row['candidate_summary']))
-        description.append(voc.sentence2idxs(row['job_description']))
+        summary.append(voc.sentence2idxs(row[0]))
+        description.append(voc.sentence2idxs(row[1]))
         if idx % 1000 == 0:
             sys.stdout.write('\rProcessing %d / %d' % (idx, total_len))
             sys.stdout.flush()
