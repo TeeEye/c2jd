@@ -46,7 +46,7 @@ class Sampler:
             for i in range(min(MAX_SENTENCE_LEN, len(row['candidate_summary']))):
                 x[count, 0, i] = row['candidate_summary'][i]
             for i in range(min(MAX_SENTENCE_LEN, len(row['job_description']))):
-                x[count, 0, i, 1, i] = row['candidate_summary'][i]
+                x[count, 1, i] = row['job_description'][i]
             y.append(row['label'])
             count += 1
         return x, np.array(y)
