@@ -27,7 +27,7 @@ class Baseline(nn.Module):
         o2, _ = self.lstm(x2)
 
         # Classifier
-        x = torch.cat([o1, o2], -1)
+        x = (o1 + o2) / 2
         x = self.fc(x)
         return F.sigmoid(x)
 
