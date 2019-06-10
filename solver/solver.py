@@ -44,7 +44,7 @@ class Solver:
             batch_x1 = torch.from_numpy(batch_x1.astype(np.int64)).to(device)
             batch_x2 = torch.from_numpy(batch_x2.astype(np.int64)).to(device)
             batch_y = torch.from_numpy(batch_y).to(device)
-            batch_y_hat = self.model((batch_x1, batch_x2))
+            batch_y_hat = self.model(batch_x1, batch_x2)
             loss = self.crit(batch_y_hat, batch_y)
             self.optim.zero_grad()
             loss.backward()
@@ -52,7 +52,7 @@ class Solver:
 
             if epoch % self.print_every == 0 or epoch == self.n_epochs:
                 print('Training %d/%d - Loss:%.3f ...' %
-                      (epoch, self.n_epochs, torch.sum(loss.data)/batch_x.size()[0]))
+                      (epoch, self.n_epochs, torch.sum(loss.data)/batch_x1.size()[0]))
             if epoch % self.save_every == 0 or epoch == self.n_epochs:
                 torch.save(self.model, self.save_path)
                 print('Model saved')

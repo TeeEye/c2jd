@@ -8,6 +8,7 @@ from utils.macros import *
 import pickle
 import random
 import numpy as np
+from itertools import zip_longest
 
 
 class Sampler:
@@ -17,42 +18,40 @@ class Sampler:
         print("Sampler initiating with seed: %d" % seed)
         random.seed(seed)
         self.batch_size = batch_size
+        self.train_test_split = train_test_split
         _current_data_index = 0  # DATA_PATH 共八个文件, 目前只用第一个文件
         with open(data_path % _current_data_index, 'rb') as data_file:
-            self.data = pickle.load(data_file)
-        test_start = int(len(self.data) * train_test_split)
-        test = self.data[test_start:]
-        self.test_x = np.zeros((len(self.data)-test_start, 2, MAX_SENTENCE_LEN))
-        print('test_x shape:', self.test_x.shape)
-        self.test_y = []
-        count = 0
-        for idx, row in test.iterrows():
-            for i in range(min(MAX_SENTENCE_LEN, len(row['candidate_summary']))):
-                self.test_x[count, 0, i] = row['candidate_summary'][i]
-            for i in range(min(MAX_SENTENCE_LEN, len(row['job_description']))):
-                self.test_x[count, 1, i] = row['job_description'][i]
-            self.test_y.append(row['label'])
-            count += 1
-        self.test_y = np.array(self.test_y)
+            data = pickle.load(data_file)
+
+        # 将 DataFrame 转化为 np.array 且 batch_size 为第二维度
+        summary = []
+        description = []
+        label = []
+        for _, row in data.iterrows():
+            summary.append(row['candidate_summary'])
+            description.append(row['job_description'])
+            label.append(row['label'])
+        self.summary = self.zero_pad(summary)
+        self.description = self.zero_pad(description)
+        self.label = label
+        test_start = int(len(self.summary) * train_test_split)
+        self.test_s = self.summary[test_start:]
+        self.test_d = self.description[test_start:]
+        self.test_l = self.label[test_start:]
         print("Sampler initiated!")
 
+    def zero_pad(self, inputs):
+        zipped = zip_longest(*inputs, fillvalue=0)
+        return np.concatenate([np.array(z).reshape(1, -1) for z in zipped])
+
     def next_batch(self):
-        start = random.randint(0, len(self.data)-self.batch_size)
-        batch = self.data[start:start+self.batch_size]
-        x = np.zeros((self.batch_size, 2, MAX_SENTENCE_LEN))
-        y = []
-        count = 0
-        for _, row in batch.iterrows():
-            for i in range(min(MAX_SENTENCE_LEN, len(row['candidate_summary']))):
-                x[count, 0, i] = row['candidate_summary'][i]
-            for i in range(min(MAX_SENTENCE_LEN, len(row['job_description']))):
-                x[count, 1, i] = row['job_description'][i]
-            y.append(row['label'])
-            count += 1
-        return x, np.array(y)
+        start = random.randint(0, int(len(self.summary) * self.train_test_split)-self.batch_size)
+        return self.summary[:, start:start+self.batch_size], \
+            self.description[:, start:start+self.batch_size], \
+            self.label[:, start:start+self.batch_size]
 
     def test(self):
-        return self.test_x, self.test_y
+        return self.test_s, self.test_d, self.test_l
 
 
 if __name__ == '__main__':
