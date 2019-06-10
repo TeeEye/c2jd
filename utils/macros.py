@@ -1,15 +1,22 @@
 """
 
 """
+import torch
+
+CUDA_AVAILABLE = torch.cuda.is_available()
+device = 'cuda' if CUDA_AVAILABLE else 'cpu'
+
 DEBUG_MODE = True
 
-PAD_TOKEN = 0
-SOS_TOKEN = 1
-EOS_TOKEN = 2
-UNK_TOKEN = 4
-PAD_STR = '__PAD__'
-SOS_STR = '__SOS__'
-EOS_STR = '__EOS__'
+UNK_TOKEN = 0
 UNK_STR = '__UNK__'
 
-MIN_COUNT = 5  # 词典接受的最小词频
+BATCH_SIZE = 128
+DATA_SIZE = 100000
+TRAIN_TEST_SPLIT = 0.9
+
+VOCABULARY_PATH = '../data/vocabulary.txt'
+DATA_PATH = '/data/wangchenghao/data/app_joined_%d.pkl'
+TRAIN_PATH = '/data/wangchenghao/data/app_train_%d.pkl'
+SAVE_PATH = '/data/wangchenghao/baseline_model.zip'
+

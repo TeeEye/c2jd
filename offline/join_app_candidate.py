@@ -3,7 +3,6 @@ import sys
 import pickle
 import pandas as pd
 from time import time
-from multiprocessing import Process
 
 
 '''
@@ -35,7 +34,7 @@ stage | stage_type | archived | filter_result
     遍历 batch, 对每个 row, 根据其 candidate_id 获得 application 的对应字段
     将 row 的 title 和 summary 以及上述其他字段组合, 放入数组
     将数组转化为一个 DataFrame, 表示该 batch join 的结果, 存入文件系统
-等待所有进程完成, 那么一共会输出 {MAX_PROC} 个文件, 即为 join 结果
+一共会输出 {MAX_PROC} 个文件, 即为 join 结果
 '''
 
 
@@ -78,37 +77,6 @@ def join_app_candidate(app_dict, candidate, output_file):
         return
     joined = pd.concat(joined_array, ignore_index=True)
     pickle.dump(joined, output_file)
-
-
-def proc_run(proc_id, app_dict):
-    """
-    每个进程执行的任务, 每个进程都独立读取 candidate 文件, 然后处理属于自己的 DataFrame
-    :param proc_id: 进程 ID
-    :param app_dict: 申请记录词典
-    :return: 无返回
-    """
-    candidate_file = open(CANDIDATE_PATH, 'rb')
-    output_file = open(OUTPUT_PATH % proc_id, 'wb')
-
-    batch_count = -1
-    while True:
-        try:
-            batch_count += 1
-            candidate = pickle.load(candidate_file)
-            # 如果读到不属于自己的 batch, 则跳过
-            if batch_count % MAX_PROC != proc_id:
-                del candidate
-                continue
-            start = time()
-            join_app_candidate(app_dict, candidate, output_file)
-            del candidate
-            print('Process [%d]: Batch_%d joined! Time cost: %.3f' % (proc_id, batch_count, time()-start))
-        except EOFError:
-            break
-
-    output_file.close()
-    candidate_file.close()
-    print('Process [%d]: Finished!' % proc_id)
 
 
 def load_app():
@@ -181,18 +149,28 @@ def run():
         del app  # 删除 app 释放内存 (内存很缺)
         print('Application dict built!')
 
-    # 多进程 join candidate
+    # 开始 join candidate
     print('Start joining candidate...')
-    processes = []
+    candidate_file = open(CANDIDATE_PATH, 'rb')
+    output_files = []
     for i in range(MAX_PROC):
-        p = Process(target=proc_run, args=(i, app_dict))
-        p.start()
-        processes.append(p)
+        output_files.append(open(OUTPUT_PATH % i, 'wb'))
 
-    # 等待进程执行结束
-    for p in processes:
-        p.join()
+    batch_count = -1
+    while True:
+        try:
+            batch_count += 1
+            candidate = pickle.load(candidate_file)
+            start = time()
+            join_app_candidate(app_dict, candidate, output_files[batch_count % MAX_PROC])
+            del candidate
+            print('Batch_%d joined! Time cost: %.3f' % (batch_count, time()-start))
+        except EOFError:
+            break
 
+    for i in range(MAX_PROC):
+        output_files[i].close()
+    candidate_file.close()
     print('All done!')
 
 
