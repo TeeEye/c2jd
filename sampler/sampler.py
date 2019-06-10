@@ -23,12 +23,14 @@ class Sampler:
         test = self.data[int(len(self.data)*train_test_split):]
         self.test_x = np.zeros((len(self.data)-int(len(self.data)*train_test_split)+1, 2, MAX_SENTENCE_LEN))
         self.test_y = []
+        count = 0
         for idx, row in test.iterrows():
             for i in range(min(MAX_SENTENCE_LEN, len(row['candidate_summary']))):
-                self.test_x[idx, 0, i] = row['candidate_summary'][i]
+                self.test_x[count, 0, i] = row['candidate_summary'][i]
             for i in range(min(MAX_SENTENCE_LEN, len(row['job_description']))):
-                self.test_x[idx, 1, i] = row['candidate_summary'][i]
+                self.test_x[count, 1, i] = row['candidate_summary'][i]
             self.test_y.append(row['label'])
+            count += 1
         self.test_y = np.array(self.test_y)
         print("Sampler initiated!")
 
@@ -37,12 +39,14 @@ class Sampler:
         batch = self.data[start:start+self.batch_size]
         x = np.zeros((self.batch_size, 2, MAX_SENTENCE_LEN))
         y = []
-        for idx, row in batch.iterrows():
+        count = 0
+        for _, row in batch.iterrows():
             for i in range(min(MAX_SENTENCE_LEN, len(row['candidate_summary']))):
-                x[idx, 0, i] = row['candidate_summary'][i]
+                x[count, 0, i] = row['candidate_summary'][i]
             for i in range(min(MAX_SENTENCE_LEN, len(row['job_description']))):
-                x[idx, 1, i] = row['candidate_summary'][i]
+                x[count, 0, i, 1, i] = row['candidate_summary'][i]
             y.append(row['label'])
+            count += 1
         return x, np.array(y)
 
     def test(self):
