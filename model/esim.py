@@ -9,7 +9,7 @@ class ESIM(nn.Module):
         self.dropout = 0.5
         self.hidden_size = hidden_size
         self.embeds_dim = embeds_dim
-        num_word = 20000
+        num_word = 48000
         self.embeds = nn.Embedding(num_word, self.embeds_dim)
         self.bn_embeds = nn.BatchNorm1d(self.embeds_dim)
         self.lstm1 = nn.LSTM(self.embeds_dim, self.hidden_size, batch_first=True, bidirectional=True)

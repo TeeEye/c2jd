@@ -1,9 +1,7 @@
 import os
-import sys
 import numpy as np
 import torch.nn as nn
 import torch.optim as optim
-from model.esim import ESIM
 from sampler.sampler import Sampler
 from utils.macros import *
 
