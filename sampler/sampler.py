@@ -22,7 +22,7 @@ class Sampler:
             self.data = pickle.load(data_file)
         test_start = int(len(self.data) * train_test_split)
         test = self.data[test_start:]
-        self.test_x = np.zeros((len(self.data)-test_start+1, 2, MAX_SENTENCE_LEN))
+        self.test_x = np.zeros((len(self.data)-test_start, 2, MAX_SENTENCE_LEN))
         print('test_x shape:', self.test_x.shape)
         self.test_y = []
         count = 0
@@ -30,7 +30,7 @@ class Sampler:
             for i in range(min(MAX_SENTENCE_LEN, len(row['candidate_summary']))):
                 self.test_x[count, 0, i] = row['candidate_summary'][i]
             for i in range(min(MAX_SENTENCE_LEN, len(row['job_description']))):
-                self.test_x[count, 1, i] = row['candidate_summary'][i]
+                self.test_x[count, 1, i] = row['job_description'][i]
             self.test_y.append(row['label'])
             count += 1
         self.test_y = np.array(self.test_y)
