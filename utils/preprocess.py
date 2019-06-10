@@ -21,8 +21,8 @@ if __name__ == '__main__':
             try:
                 app = pickle.load(f)
                 app = app[['candidate_summary', 'job_description', 'job_class_1']]
-                app = app[app['candidate_summary'].str.len > 1]
-                app = app[app['job_description'].str.len > 1]
+                app = app[app['candidate_summary'].str.len() > 1]
+                app = app[app['job_description'].str.len() > 1]
                 app.dropna(inplace=True)
                 app_arr.append(app)
                 current_count += len(app)
