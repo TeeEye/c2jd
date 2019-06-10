@@ -1,8 +1,9 @@
+import sys
+sys.path.append("..")
+
 import pickle
 import pandas as pd
-import sys
 from utils.macros import *
-sys.path.append("..")
 
 
 if __name__ == '__main__':
