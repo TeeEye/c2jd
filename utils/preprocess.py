@@ -4,6 +4,7 @@ sys.path.append("..")
 import pickle
 import pandas as pd
 from utils.macros import *
+from utils.vocabulary import Voc
 
 
 if __name__ == '__main__':
@@ -28,12 +29,12 @@ if __name__ == '__main__':
     print('Start data cleaning...')
     app = pd.concat(app_arr, ignore_index=True)
     app = app.head(TRAIN_SIZE)
-    total_len = len(app)
     app = app[app['job_description'] != '']
     app = app[app['candidate_summary'] != '']
     app['job_class_1'].dropna(inplace=True)
     app = app[['candidate_summary', 'job_description', 'job_class_1']]
     app['label'] = 1
+    total_len = len(app)
     app.reset_index(drop=True, inplace=True)
     print('Data cleaning finished!')
 
@@ -59,6 +60,20 @@ if __name__ == '__main__':
             sys.stdout.write('\rProcessing %d / %d' % (a, total_len))
             sys.stdout.flush()
     print('\nDone!')
+    print('Converting words into indices')
+    summary = []
+    description = []
+    voc = Voc()
+    for idx, row in app.iterrows():
+        summary.append(voc.sentence2idxs(row['candidate_summary']))
+        description.append(voc.sentence2idxs(row['job_description']))
+        if idx % 1000 == 0:
+            sys.stdout.write('\rProcessing %d / %d' % (idx, total_len))
+            sys.stdout.flush()
+    app['candidate_summary'] = summary
+    app['job_description'] = description
+    print('\nDone!')
+
     print('Saving final data...')
     with open(train_data_path, 'wb') as f:
         pickle.dump(app, f)

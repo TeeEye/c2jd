@@ -9,6 +9,7 @@
 
 """
 from utils.macros import *
+import numpy as np
 import jieba
 import sys
 import os
@@ -65,13 +66,7 @@ class Voc:
             if idx == UNK_TOKEN:
                 continue
             result.append(idx)
-        return result
-
-    def sentence_batch_2_idxs(self, batch):
-        result = []
-        for sentence in batch:
-            result.append(self.sentence2idxs(sentence))
-        return result
+        return np.array(result)
 
 
 if __name__ == '__main__':
