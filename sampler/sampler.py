@@ -21,7 +21,7 @@ class Sampler:
         with open(data_path % _current_data_index, 'rb') as data_file:
             self.data = pickle.load(data_file)
         test = self.data[int(len(self.data)*train_test_split):]
-        self.test_x = np.zeros((len(test)-int(len(self.data)*train_test_split)+1, 2, MAX_SENTENCE_LEN))
+        self.test_x = np.zeros((len(self.data)-int(len(self.data)*train_test_split)+1, 2, MAX_SENTENCE_LEN))
         self.test_y = []
         for idx, row in test.iterrows():
             for i in range(min(MAX_SENTENCE_LEN, len(row['candidate_summary']))):
