@@ -42,7 +42,7 @@ class Sampler:
 
     def zero_pad(self, inputs):
         zipped = zip_longest(*inputs, fillvalue=0)
-        return np.concatenate([(np.pad(np.array(z), (0, min(PAD_SIZE-len(z), 0)), 'constant'))[:PAD_SIZE].reshape(1, -1) for z in zipped])
+        return np.concatenate([np.array(z).reshape(1, -1) for z in zipped]).T
 
     def next_batch(self):
         start = random.randint(0, int(len(self.summary) * self.train_test_split)-self.batch_size)
