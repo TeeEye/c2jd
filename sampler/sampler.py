@@ -2,11 +2,11 @@
 从训练集中取数据
 """
 
-from utils.macros import *
 import sys
+sys.path.append('..')
+from utils.macros import *
 import pickle
 import random
-sys.path.append('..')
 
 
 class Sampler:
