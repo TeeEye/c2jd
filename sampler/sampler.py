@@ -33,7 +33,7 @@ class Sampler:
             label.append(row['label'])
         self.summary = self.zero_pad(summary)
         self.description = self.zero_pad(description)
-        self.label = label
+        self.label = np.array(label)
         test_start = int(len(self.summary) * train_test_split)
         self.test_s = self.summary[test_start:]
         self.test_d = self.description[test_start:]
@@ -48,7 +48,7 @@ class Sampler:
         start = random.randint(0, int(len(self.summary) * self.train_test_split)-self.batch_size)
         return self.summary[:, start:start+self.batch_size], \
             self.description[:, start:start+self.batch_size], \
-            self.label[:, start:start+self.batch_size]
+            self.label[start:start+self.batch_size]
 
     def test(self):
         return self.test_s, self.test_d, self.test_l

@@ -16,14 +16,11 @@ class ESIM(nn.Module):
         self.lstm2 = nn.LSTM(self.hidden_size * 8, self.hidden_size, batch_first=True, bidirectional=True)
 
         self.fc = nn.Sequential(
-            nn.BatchNorm1d(self.hidden_size * 8),
             nn.Linear(self.hidden_size * 8, linear_size),
             nn.ELU(inplace=True),
-            nn.BatchNorm1d(linear_size),
             nn.Dropout(self.dropout),
             nn.Linear(linear_size, linear_size),
             nn.ELU(inplace=True),
-            nn.BatchNorm1d(linear_size),
             nn.Dropout(self.dropout),
             nn.Linear(linear_size, 2),
             nn.Softmax(dim=-1)
