@@ -15,16 +15,8 @@ class ESIM(nn.Module):
         self.lstm1 = nn.LSTM(self.embeds_dim, self.hidden_size, batch_first=True, bidirectional=True)
         self.lstm2 = nn.LSTM(self.hidden_size * 8, self.hidden_size, batch_first=True, bidirectional=True)
 
-        self.fc = nn.Sequential(
-            nn.Linear(self.hidden_size * 8, linear_size),
-            nn.ELU(inplace=True),
-            nn.Dropout(self.dropout),
-            nn.Linear(linear_size, linear_size),
-            nn.ELU(inplace=True),
-            nn.Dropout(self.dropout),
-            nn.Linear(linear_size, 2),
-            nn.Softmax(dim=-1)
-        )
+        self.fc = nn.Linear(self.hidden_size * 8, 1)
+
 
     def soft_attention_align(self, x1, x2, mask1, mask2):
         """
@@ -92,7 +84,7 @@ class ESIM(nn.Module):
         # Classifier
         x = torch.cat([q1_rep, q2_rep], -1)
         similarity = self.fc(x)
-        return similarity
+        return F.sigmoid(similarity)
 
 
 if __name__ == '__main__':
