@@ -29,12 +29,12 @@ if __name__ == '__main__':
     app = pd.concat(app_arr, ignore_index=True)
     app = app.head(TRAIN_SIZE)
     total_len = len(app)
-    app.reset_index(drop=True, inplace=True)
     app = app[app['job_description'] != '']
     app = app[app['candidate_summary'] != '']
     app['job_class_1'].dropna(inplace=True)
     app = app[['candidate_summary', 'job_description', 'job_class_1']]
     app['label'] = 1
+    app.reset_index(drop=True, inplace=True)
     print('Data cleaning finished!')
 
     for a in range(0, total_len-1, 2):
