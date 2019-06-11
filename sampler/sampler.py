@@ -40,6 +40,7 @@ class Sampler:
             input_len = min(PAD_SIZE, len(input))
             for i in range(input_len):
                 result[index, i] = input[i]
+            inputs_len.append(input_len)
         return result, inputs_len
 
     def next_batch(self):

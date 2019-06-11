@@ -5,17 +5,6 @@ import torch
 def batch_select(tensor, index):
     return tensor.gather(1, index.view(-1, 1, 1).expand(tensor.size(0), 1, tensor.size(2))).squeeze(1)
 
-
-def RunRnn(rnn, inputs, seq_lengths):
-    sorted_seq_lengths, indices = torch.sort(seq_lengths, descending=True)
-    _, desorted_indices = torch.sort(indices, descending=False)
-    inputs = inputs.index_select(0, indices)
-    packed_inputs = nn.utils.rnn.pack_padded_sequence(inputs, sorted_seq_lengths, batch_first=True)
-    res, _ = rnn(packed_inputs)
-    padded_res, _ = nn.utils.rnn.pad_packed_sequence(res, batch_first=True, total_length=inputs.shape[1])
-    return padded_res.index_select(0, desorted_indices).contiguous()
-
-
 class Baseline(nn.Module):
     def __init__(self, hidden_size=300, embeds_dim=200):
         super(Baseline, self).__init__()
@@ -31,8 +20,8 @@ class Baseline(nn.Module):
         # embeds: batch_size * seq_len => batch_size * seq_len * dim
 
         # batch_size * seq_len * dim => batch_size * seq_len * hidden_size
-        o1 = RunRnn(self.lstm, x1, len1)
-        o2 = RunRnn(self.lstm, x2, len2)
+        o1, _ = self.lstm(x1)
+        o2, _ = self.lstm(x2)
 
         o1 = batch_select(o1, len1)
         o2 = batch_select(o2, len2)
