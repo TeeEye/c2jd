@@ -8,7 +8,7 @@ from utils.macros import *
 
 class Solver:
     def __init__(self, model, n_epochs=1000, lr=1e-4,
-                 print_every=100, save_every=100, save_path=SAVE_PATH):
+                 print_every=1, save_every=100, save_path=SAVE_PATH):
         """
         :param model: 模型
         :param n_epochs: 训练周期
@@ -39,17 +39,19 @@ class Solver:
         self.model.train()
         for epoch in range(1, self.n_epochs+1):
             batch_x1, batch_x2, batch_y = self.sampler.next_batch()
+            len_1 = [x.shape[0] for x in batch_x1]
+            len_2 = [x.shape[0] for x in batch_x2]
             batch_x1 = torch.from_numpy(batch_x1).to(device)
             batch_x2 = torch.from_numpy(batch_x2).to(device)
             batch_y = torch.from_numpy(batch_y).float().to(device)
-            batch_y_hat = self.model(batch_x1, batch_x2)
+            batch_y_hat = self.model(batch_x1, batch_x2, len_1, len_2)
             loss = self.crit(batch_y_hat, batch_y)
             self.optim.zero_grad()
             loss.backward()
             self.optim.step()
 
             if epoch % self.print_every == 0 or epoch == self.n_epochs:
-                print('Training %d/%d - Loss:%.3f ...' %
+                print('Training %d/%d - Loss:%.5f ...' %
                       (epoch, self.n_epochs, torch.sum(loss.data)/batch_x1.size()[0]))
             if epoch % self.save_every == 0 or epoch == self.n_epochs:
                 torch.save(self.model, self.save_path)

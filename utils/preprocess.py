@@ -3,8 +3,9 @@ sys.path.append("..")
 
 import pickle
 import pandas as pd
+import numpy as np
 from utils.macros import *
-from utils.vocabulary import Voc
+from utils.embedding import Embedding
 
 
 if __name__ == '__main__':
@@ -12,6 +13,9 @@ if __name__ == '__main__':
     current_train_file = 0
     raw_data_path = DATA_PATH % current_train_file
     train_data_path = TRAIN_PATH % current_train_file
+
+    with open(EMBEDDING_PATH, 'rb') as f:
+        tencent = pickle.load(f)
 
     # 先将所有数据合并
     current_count = 0
@@ -63,15 +67,15 @@ if __name__ == '__main__':
     print('Converting words into indices')
     summary = []
     description = []
-    voc = Voc()
+    embedding = Embedding()
     for idx, row in app.iterrows():
-        summary.append(voc.sentence2idxs(row[0]))
-        description.append(voc.sentence2idxs(row[1]))
+        summary.append(embedding.sentence2vec(row[0]))
+        description.append(embedding.sentence2vec(row[1]))
         if idx % 1000 == 0:
             sys.stdout.write('\rProcessing %d / %d' % (idx, total_len))
             sys.stdout.flush()
-    app['candidate_summary'] = summary
-    app['job_description'] = description
+    app['candidate_summary'] = np.array(summary)
+    app['job_description'] = np.array(description)
     print('\nDone!')
 
     print('Saving final data...')

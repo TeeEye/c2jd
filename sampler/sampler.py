@@ -8,17 +8,14 @@ from utils.macros import *
 import pickle
 import random
 import numpy as np
-from itertools import zip_longest
 
 
 class Sampler:
-    def __init__(self, batch_size=BATCH_SIZE, train_test_split=TRAIN_TEST_SPLIT,
-                 data_path=TRAIN_PATH):
+    def __init__(self, batch_size=BATCH_SIZE, data_path=TRAIN_PATH):
         seed = random.randint(0, 1000)
         print("Sampler initiating with seed: %d" % seed)
         random.seed(seed)
         self.batch_size = batch_size
-        self.train_test_split = train_test_split
         _current_data_index = 0  # DATA_PATH 共八个文件, 目前只用第一个文件
         with open(data_path % _current_data_index, 'rb') as data_file:
             data = pickle.load(data_file)
@@ -34,15 +31,9 @@ class Sampler:
         self.summary = self.zero_pad(summary)
         self.description = self.zero_pad(description)
         self.label = np.array(label)
-        test_start = int(len(self.summary) * train_test_split)
-        self.test_s = self.summary[test_start:]
-        self.test_d = self.description[test_start:]
-        self.test_l = self.label[test_start:]
         print("Sampler initiated!")
 
     def zero_pad(self, inputs):
-        # zipped = zip_longest(*inputs, fillvalue=0)
-        # return np.concatenate([np.array(z).reshape(1, -1) for z in zipped]).T.astype(np.int64)
         result = np.zeros((len(inputs), PAD_SIZE))
         for index, input in enumerate(inputs):
             for i in range(min(PAD_SIZE, len(input))):
@@ -50,13 +41,10 @@ class Sampler:
         return result.astype(np.int64)
 
     def next_batch(self):
-        start = random.randint(0, int(len(self.summary) * self.train_test_split)-self.batch_size)
+        start = random.randint(0, len(self.summary)-self.batch_size)
         return self.summary[start:start+self.batch_size], \
             self.description[start:start+self.batch_size], \
             self.label[start:start+self.batch_size]
-
-    def test(self):
-        return self.test_s, self.test_d, self.test_l
 
 
 if __name__ == '__main__':
