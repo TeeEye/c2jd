@@ -74,10 +74,11 @@ if __name__ == '__main__':
         if idx % 1000 == 0:
             sys.stdout.write('\rProcessing %d / %d' % (idx, total_len))
             sys.stdout.flush()
+    del embedding
+    print('memory released!')
     app['candidate_summary'] = np.array(summary)
     app['job_description'] = np.array(description)
     print('\nDone!')
-    del embedding
     print('Saving final data...')
     with open(train_data_path, 'wb') as f:
         pickle.dump(app, f)
