@@ -38,9 +38,7 @@ class Solver:
         print('Start training...')
         self.model.train()
         for epoch in range(1, self.n_epochs+1):
-            batch_x1, batch_x2, batch_y = self.sampler.next_batch()
-            len_1 = [x.shape[0] for x in batch_x1]
-            len_2 = [x.shape[0] for x in batch_x2]
+            batch_x1, batch_x2, batch_y, len_1, len_2 = self.sampler.next_batch()
             batch_x1 = torch.from_numpy(batch_x1).to(device)
             batch_x2 = torch.from_numpy(batch_x2).to(device)
             batch_y = torch.from_numpy(batch_y).float().to(device)

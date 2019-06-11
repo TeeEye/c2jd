@@ -10,7 +10,6 @@ class Baseline(nn.Module):
         super(Baseline, self).__init__()
         self.hidden_size = hidden_size
         self.embeds_dim = embeds_dim
-        num_word = 48000
         self.lstm = nn.LSTM(self.embeds_dim, self.hidden_size, batch_first=True, bidirectional=True)
         self.fc = nn.Linear(self.hidden_size * 4, 1)
 

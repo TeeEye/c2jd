@@ -28,23 +28,27 @@ class Sampler:
             summary.append(row['candidate_summary'])
             description.append(row['job_description'])
             label.append(row['label'])
-        self.summary = self.zero_pad(summary)
-        self.description = self.zero_pad(description)
+        self.summary, self.len1 = self.zero_pad(summary)
+        self.description, self.len2 = self.zero_pad(description)
         self.label = np.array(label)
         print("Sampler initiated!")
 
     def zero_pad(self, inputs):
         result = np.zeros((len(inputs), PAD_SIZE, EMBED_DIM))
+        inputs_len = []
         for index, input in enumerate(inputs):
-            for i in range(min(PAD_SIZE, len(input))):
+            input_len = min(PAD_SIZE, len(input))
+            for i in range(input_len):
                 result[index, i] = input[i]
-        return result
+        return result, inputs_len
 
     def next_batch(self):
         start = random.randint(0, len(self.summary)-self.batch_size)
         return self.summary[start:start+self.batch_size], \
             self.description[start:start+self.batch_size], \
-            self.label[start:start+self.batch_size]
+            self.label[start:start+self.batch_size], \
+            self.len1[start:start+self.batch_size], \
+            self.len2[start:start+self.batch_size]
 
 
 if __name__ == '__main__':
