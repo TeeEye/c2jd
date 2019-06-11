@@ -14,9 +14,6 @@ if __name__ == '__main__':
     raw_data_path = DATA_PATH % current_train_file
     train_data_path = TRAIN_PATH % current_train_file
 
-    with open(EMBEDDING_PATH, 'rb') as f:
-        tencent = pickle.load(f)
-
     # 先将所有数据合并
     current_count = 0
     with open(raw_data_path, 'rb') as f:
@@ -76,8 +73,8 @@ if __name__ == '__main__':
             sys.stdout.flush()
     del embedding
     print('memory released!')
-    app['candidate_summary'] = np.array(summary)
-    app['job_description'] = np.array(description)
+    app['candidate_summary'] = np.asarray(summary)
+    app['job_description'] = np.asarray(description)
     print('\nDone!')
     print('Saving final data...')
     with open(train_data_path, 'wb') as f:
