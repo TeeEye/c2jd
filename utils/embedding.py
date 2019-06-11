@@ -14,6 +14,8 @@ class Embedding:
                 try:
                     dic = pickle.load(f)
                     for k, v, in dic.items():
+                        if len(k) > 6:
+                            continue
                         self.word2vec[k] = v
                     del dic
                 except EOFError:
