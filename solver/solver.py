@@ -41,7 +41,7 @@ class Solver:
             batch_x1, batch_x2, batch_y = self.sampler.next_batch()
             batch_x1 = torch.from_numpy(batch_x1).to(device)
             batch_x2 = torch.from_numpy(batch_x2).to(device)
-            batch_y = torch.from_numpy(batch_y).to(device)
+            batch_y = torch.from_numpy(batch_y).float().to(device)
             batch_y_hat = self.model(batch_x1, batch_x2)
             loss = self.crit(batch_y_hat, batch_y)
             self.optim.zero_grad()

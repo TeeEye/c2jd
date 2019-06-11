@@ -43,17 +43,16 @@ class Sampler:
     def zero_pad(self, inputs):
         # zipped = zip_longest(*inputs, fillvalue=0)
         # return np.concatenate([np.array(z).reshape(1, -1) for z in zipped]).T.astype(np.int64)
-        result = np.zeros(self.batch_size, PAD_SIZE)
+        result = np.zeros((len(inputs), PAD_SIZE))
         for index, input in enumerate(inputs):
             for i in range(min(PAD_SIZE, len(input))):
                 result[index, i] = input[i]
-        return result
-
+        return result.astype(np.int64)
 
     def next_batch(self):
         start = random.randint(0, int(len(self.summary) * self.train_test_split)-self.batch_size)
-        return self.summary[:, start:start+self.batch_size], \
-            self.description[:, start:start+self.batch_size], \
+        return self.summary[start:start+self.batch_size], \
+            self.description[start:start+self.batch_size], \
             self.label[start:start+self.batch_size]
 
     def test(self):

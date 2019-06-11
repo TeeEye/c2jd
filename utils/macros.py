@@ -12,7 +12,7 @@ UNK_TOKEN = 0
 UNK_STR = '__UNK__'
 
 MAX_SENTENCE_LEN = 128
-BATCH_SIZE = 16
+BATCH_SIZE = 2
 TRAIN_SIZE = 10000
 PAD_SIZE = 10000
 TRAIN_TEST_SPLIT = 0.9
@@ -21,4 +21,5 @@ VOCABULARY_PATH = '../data/vocabulary.txt'
 DATA_PATH = '/data/wangchenghao/data/app_joined_%d.pkl'
 TRAIN_PATH = '/data/wangchenghao/data/app_train_%d.pkl'
 SAVE_PATH = '/data/wangchenghao/baseline_model.zip'
-
+# TRAIN_PATH = '/Users/wangchenghao1103/Desktop/app_demo_%d.pkl'
+# SAVE_PATH = '/Users/wangchenghao1103/Desktop/baseline_model.zip'
