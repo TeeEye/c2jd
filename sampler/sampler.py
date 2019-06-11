@@ -34,7 +34,7 @@ class Sampler:
         print("Sampler initiated!")
 
     def zero_pad(self, inputs):
-        result = np.zeros((len(inputs), PAD_SIZE))
+        result = np.zeros((len(inputs), PAD_SIZE, EMBED_DIM))
         for index, input in enumerate(inputs):
             for i in range(min(PAD_SIZE, len(input))):
                 result[index, i] = input[i]
