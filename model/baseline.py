@@ -16,11 +16,9 @@ class Baseline(nn.Module):
 
     def forward(self, *inputs):
         # batch_size * seq_len
-        sent1, sent2 = inputs[0], inputs[1]
+        x1, x2 = inputs[0], inputs[1]
         len1, len2 = inputs[2], inputs[3]
         # embeds: batch_size * seq_len => batch_size * seq_len * dim
-        x1 = self.embeds(sent1)
-        x2 = self.embeds(sent2)
 
         # batch_size * seq_len * dim => batch_size * seq_len * hidden_size
         o1, _ = self.lstm(x1)

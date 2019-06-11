@@ -38,7 +38,7 @@ class Sampler:
         for index, input in enumerate(inputs):
             for i in range(min(PAD_SIZE, len(input))):
                 result[index, i] = input[i]
-        return result.astype(np.int64)
+        return result
 
     def next_batch(self):
         start = random.randint(0, len(self.summary)-self.batch_size)
