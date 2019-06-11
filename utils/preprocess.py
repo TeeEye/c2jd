@@ -64,7 +64,7 @@ if __name__ == '__main__':
             sys.stdout.write('\rProcessing %d / %d' % (a, total_len))
             sys.stdout.flush()
     print('\nDone!')
-    print('Converting words into indices')
+    print('Converting words into vecs')
     summary = []
     description = []
     embedding = Embedding()
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     app['candidate_summary'] = np.array(summary)
     app['job_description'] = np.array(description)
     print('\nDone!')
-
+    del embedding
     print('Saving final data...')
     with open(train_data_path, 'wb') as f:
         pickle.dump(app, f)
