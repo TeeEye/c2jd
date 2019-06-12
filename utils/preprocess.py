@@ -20,7 +20,7 @@ def shuffle_data(app):
     jds = []
     for _ in range(total_len):
         labels.append(1)
-        jds.append([''])
+        jds.append('_')
     for idx, row in app.iterrows():
         if idx >= half_len:
             break
@@ -31,6 +31,8 @@ def shuffle_data(app):
         else:
             jds[idx] = app.iloc[other, 1]
             jds[other] = app.iloc[idx, 1]
+            print(jds[idx])
+            print(jds[other])
             labels[idx] = 0
             labels[other] = 0
     app['label'] = labels
