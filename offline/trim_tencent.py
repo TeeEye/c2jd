@@ -25,6 +25,7 @@ def run():
             while True:
                 try:
                     app = pickle.load(f)
+                    app = app[['candidate_summary', 'job_description']].dropna()
                     print('App batch loaded')
                     for _, row in app.iterrows():
                         for word in jieba.cut(row['job_description']):
