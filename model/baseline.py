@@ -23,24 +23,21 @@ class Baseline(nn.Module):
         )
 
     def forward(self, *inputs):
-        # batch_size * seq_len
+        # Encoder
         x1, x2 = inputs[0], inputs[1]
         len1, len2 = inputs[2], inputs[3]
-        # embeds: batch_size * seq_len => batch_size * seq_len * dim
-
-        # batch_size * seq_len * dim => batch_size * seq_len * hidden_size
         o1, _ = self.lstm(x1)
         o2, _ = self.lstm(x2)
-
         o1 = batch_select(o1, len1)
         o2 = batch_select(o2, len2)
+        x = torch.cat([o1, o2], 1)
 
         # Classifier
-        x = torch.cat([o1, o2], 1)
         x = self.fc(x)
-        return torch.sigmoid(x)
+        x = torch.sigmoid(x)
+        return x
 
 
 if __name__ == '__main__':
-    b = Baseline(hidden_size=300, embeds_dim=200)
+    b = Baseline()
     print(b)
