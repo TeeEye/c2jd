@@ -11,6 +11,25 @@ from utils.embedding import Embedding
     app_joined -> app_train
 """
 
+
+def text2vec(app):
+    # 向量化
+    total_len = len(app)
+    print('Converting words into vec')
+    summary = []
+    description = []
+    count = 0
+    for idx, row in app.iterrows():
+        count += 1
+        summary.append(embedding.sentence2vec(row['candidate_summary']))
+        description.append(embedding.sentence2vec(row['job_description']))
+        if count % 1000 == 0 or count == total_len:
+            sys.stdout.write('\rProcessing %d / %d' % (count, total_len))
+            sys.stdout.flush()
+    app['candidate_summary'] = np.asarray(summary)
+    app['job_description'] = np.asarray(description)
+    print('\nDone!')
+
 def run():
     # 目前只使用第一个训练数据
     current_train_file = 0
@@ -53,32 +72,13 @@ def run():
                 app['job_description'] = jds
                 print('Done!')
 
-                # 向量化
-                total_len = len(app)
-                print('Converting words into vec')
-                summary = []
-                description = []
-                count = 0
-                for idx, row in app.iterrows():
-                    count += 1
-                    summary.append(embedding.sentence2vec(row['candidate_summary']))
-                    description.append(embedding.sentence2vec(row['job_description']))
-                    if count % 1000 == 0:
-                        sys.stdout.write('\rProcessing %d / %d' % (count, total_len))
-                        sys.stdout.flush()
-                del app['candidate_summary']
-                del app['job_description']
-                app['candidate_summary'] = np.asarray(summary)
-                app['job_description'] = np.asarray(description)
+                for offset in range(0, len(app), TRAIN_SIZE):
+                    app_batch = app.iloc[offset:offset+TRAIN_SIZE]
+                    text2vec(app_batch)
+                    print(app_batch.iloc[0])
+                    pickle.dump(app_batch, output_file)
 
-                print('\nDone!')
-                print(app.iloc[0])
-                pickle.dump(app, output_file)
-                # for offset in range(0, len(app), TRAIN_SIZE):
-                #     app_batch = app.iloc[offset:offset+TRAIN_SIZE]
-                #
                 del app
-                break
             except EOFError:
                 break
 
