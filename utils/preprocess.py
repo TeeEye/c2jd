@@ -6,6 +6,10 @@ import numpy as np
 from utils.macros import *
 from utils.embedding import Embedding
 
+"""
+    将原始数据转化为向量化后的可直接喂给网络的数据
+    app_joined -> app_train
+"""
 
 def shuffle_data(app):
     # 生成负样本
@@ -76,6 +80,7 @@ def run():
                 shuffle_data(app)
                 for offset in range(0, len(app), TRAIN_SIZE):
                     app_batch = app.iloc[offset:offset+TRAIN_SIZE]
+                    print(app_batch.head(0))
                     text2vec(app_batch)
                     pickle.dump(app_batch, output_file)
                 del app
