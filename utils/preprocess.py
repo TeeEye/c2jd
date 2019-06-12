@@ -11,25 +11,28 @@ def shuffle_data(app):
     # 生成负样本
     print('Shuffling data...')
     total_len = len(app)
-    for a in range(0, total_len - 1, 2):
-        b = (a + total_len // 2) % total_len
-        row_a = app.iloc[a]
-        row_b = app.iloc[b]
-        cls_a = row_a['job_class_1']
-        cls_b = row_b['job_class_1']
-        if cls_a == cls_b:
-            continue
-        tmp_summary = row_a['candidate_summary']
-        tmp_description = row_a['job_description']
-        app.iloc[a, 0] = row_b[0]
-        app.iloc[a, 1] = row_b[1]
-        app.iloc[a, 2] = cls_b
-        app.iloc[a, 3] = 0
-        app.iloc[b, 0] = tmp_summary
-        app.iloc[b, 1] = tmp_description
-        app.iloc[b, 2] = cls_a
-        app.iloc[b, 3] = 0
-    print('\nDone!')
+    half_len = total_len // 2
+    labels = []
+    jds = []
+    for _ in range(total_len):
+        labels.append(1)
+        jds.append([''])
+    for idx, row in app.iterrows():
+        if idx >= half_len:
+            break
+        other = idx + half_len
+        if idx % 2 == 0 or app.iloc[idx, 2] == app.iloc[other, 2]:
+            jds[idx] = app.iloc[idx, 1]
+            jds[other] = app.iloc[other, 1]
+        else:
+            jds[idx] = app.iloc[other, 1]
+            jds[other] = app.iloc[idx, 1]
+            labels[idx] = 0
+            labels[other] = 0
+    app['label'] = labels
+    del app['job_description']
+    app['job_description'] = jds
+    print('Done!')
 
 
 def text2vec(app):
@@ -63,16 +66,15 @@ def run():
         while True:
             try:
                 app = pickle.load(f)
-                print('Data loaded ', len(app))
                 app = app[['candidate_summary', 'job_description', 'job_class_1']]
                 app = app[app['candidate_summary'].str.len() > 1]
                 app = app[app['job_description'].str.len() > 1]
                 app.dropna(inplace=True)
-                app['label'] = 1
+                print('Data loaded ', len(app))
                 app.reset_index(drop=True, inplace=True)
+                shuffle_data(app)
                 for offset in range(0, len(app), TRAIN_SIZE):
                     app_batch = app.iloc[offset:offset+TRAIN_SIZE]
-                    shuffle_data(app_batch)
                     text2vec(app_batch)
                     pickle.dump(app_batch, output_file)
                 del app
