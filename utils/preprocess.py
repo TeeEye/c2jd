@@ -61,8 +61,8 @@ def run():
                 count = 0
                 for idx, row in app.iterrows():
                     count += 1
-                    summary.append(embedding.sentence2vec(row[0]))
-                    description.append(embedding.sentence2vec(row[1]))
+                    summary.append(embedding.sentence2vec(row['candidate_summary']))
+                    description.append(embedding.sentence2vec(row['job_description']))
                     if count % 1000 == 0:
                         sys.stdout.write('\rProcessing %d / %d' % (count, total_len))
                         sys.stdout.flush()
