@@ -18,23 +18,23 @@ def shuffle_data(app):
     half_len = total_len // 2
     labels = []
     jds = []
-    for _ in range(total_len):
-        labels.append(1)
-        jds.append('_')
+
     for idx, row in app.iterrows():
-        if idx >= half_len:
-            break
+        labels.append(1)
+        jds.append(row['job_description'])
+
+    for idx, row in app.iterrows():
         other = idx + half_len
-        if idx % 2 == 0 or app.iloc[idx, 2] == app.iloc[other, 2]:
-            jds[idx] = app.iloc[idx, 1]
-            jds[other] = app.iloc[other, 1]
-        else:
+        if other >= total_len:
+            break
+        if app.iloc[idx, 2] != app.iloc[other, 2]:
+            print(app.iloc[idx, 2], app.iloc[other, 2])
             jds[idx] = app.iloc[other, 1]
             jds[other] = app.iloc[idx, 1]
-            print(jds[idx])
-            print(jds[other])
             labels[idx] = 0
             labels[other] = 0
+        print(jds[idx])
+        print(jds[other])
     app['label'] = labels
     del app['job_description']
     app['job_description'] = jds
