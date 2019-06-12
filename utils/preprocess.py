@@ -11,34 +11,6 @@ from utils.embedding import Embedding
     app_joined -> app_train
 """
 
-def shuffle_data(app):
-    # 生成负样本
-    print('Shuffling data...')
-    total_len = len(app)
-    half_len = total_len // 2
-    labels = []
-    jds = []
-
-    for idx, row in app.iterrows():
-        labels.append(1)
-        jds.append(row['job_description'])
-
-    for idx, row in app.iterrows():
-        other = idx + half_len
-        if other >= total_len:
-            break
-        if app.iloc[idx, 2] != app.iloc[other, 2]:
-            jds[idx] = app.iloc[other, 1]
-            jds[other] = app.iloc[idx, 1]
-            labels[idx] = 0
-            labels[other] = 0
-    app['label'] = labels
-    del app['job_description']
-    app['job_description'] = jds
-    print('Done!')
-    return app
-
-
 def run():
     # 目前只使用第一个训练数据
     current_train_file = 0
@@ -57,7 +29,29 @@ def run():
                 app.dropna(inplace=True)
                 print('Data loaded ', len(app))
                 app.reset_index(drop=True, inplace=True)
-                app = shuffle_data(app)
+                # 生成负样本
+                print('Shuffling data...')
+                total_len = len(app)
+                half_len = total_len // 2
+                labels = []
+                jds = []
+
+                for idx, row in app.iterrows():
+                    labels.append(1)
+                    jds.append(row['job_description'])
+
+                for idx, row in app.iterrows():
+                    other = idx + half_len
+                    if other >= total_len:
+                        break
+                    if app.iloc[idx, 2] != app.iloc[other, 2]:
+                        jds[idx] = app.iloc[other, 1]
+                        jds[other] = app.iloc[idx, 1]
+                        labels[idx] = 0
+                        labels[other] = 0
+                app['label'] = labels
+                app['job_description'] = jds
+                print('Done!')
 
                 # 向量化
                 total_len = len(app)
