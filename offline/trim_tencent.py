@@ -5,6 +5,7 @@ import pickle
 from collections import defaultdict
 import jieba
 
+
 def run():
     print('Loading tencent embedding...')
     tencent = {}
