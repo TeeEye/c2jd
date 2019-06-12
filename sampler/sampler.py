@@ -71,10 +71,10 @@ class Sampler:
             self.len1[start:start+self.batch_size], \
             self.len2[start:start+self.batch_size]
 
-
     def test_set(self):
         self.load_data()
         return self.summary, self.description, self.label, self.len1, self.len2
+
 
 if __name__ == '__main__':
     s = Sampler(batch_size=16)

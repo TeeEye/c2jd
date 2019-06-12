@@ -11,14 +11,13 @@ DEBUG_MODE = True
 UNK_TOKEN = 0
 UNK_STR = '__UNK__'
 
-MAX_SENTENCE_LEN = 128
+MAX_SENTENCE_LEN = 1000
 BATCH_SIZE = 16
 TRAIN_SIZE = 1000
-PAD_SIZE = 500
+PAD_SIZE = 500 # 句子词向量的最大长度, 统计分布上约为 80%
 EMBED_DIM = 200
 TRAIN_TEST_SPLIT = 0.9
 TRAIN_DATA_REUSE_TIMES = 10
-MAX_SENTENCE_LEN = 1000
 
 DATA_PATH = '/data/wangchenghao/data/app_joined_%d.pkl'
 TRAIN_PATH = '/data/wangchenghao/data/app_train_%d.pkl'
