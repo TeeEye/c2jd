@@ -1,5 +1,4 @@
 import os
-import numpy as np
 import torch.nn as nn
 import torch.optim as optim
 from sampler.sampler import Sampler
@@ -77,4 +76,3 @@ class Solver:
         accuracy = (batch_y == pred_y).sum().item() / batch_y.size()[0]
         print('Test accuracy: %.5f' % accuracy)
         self.model.train()
-
