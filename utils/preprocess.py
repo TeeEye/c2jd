@@ -9,11 +9,15 @@ from utils.embedding import Embedding
 """
     将原始数据转化为向量化后的可直接喂给网络的数据
     app_joined -> app_train
+    目前原始数据文件位于 /data/wangchenghao/data/app_joined_%d.pkl
+    目标文件位于同一文件夹下
 """
 
 
 def text2vec(app):
-    # 向量化
+    """
+    将 app 的 candidate_summary 和 job_description 字段向量化
+    """
     total_len = len(app)
     print('Converting words into vec')
     summary = []
@@ -72,11 +76,9 @@ def run():
                 app['job_description'] = jds
                 print('Done!')
 
-                app_batches = []
+                app_batches = [app.iloc[i:i+TRAIN_SIZE] for i in range(0, len(app), TRAIN_SIZE)]
 
-                for offset in range(0, len(app), TRAIN_SIZE):
-                    app_batches.append(app.iloc[offset:offset+TRAIN_SIZE])
-
+                # 解除引用
                 del app
 
                 for i in range(len(app_batches)):
@@ -95,5 +97,6 @@ def run():
 
 
 if __name__ == '__main__':
+    # 加载腾讯词向量
     embedding = Embedding()
     run()

@@ -1,4 +1,8 @@
 """
+    DEPRECATED
+"""
+
+"""
     该模块定义了词典，主要作用是 sentence2idxs
     用法：
     voc = Voc() # 该步直接生成可用的词典
