@@ -20,7 +20,6 @@ TRAIN_TEST_SPLIT = 0.9
 TRAIN_DATA_REUSE_TIMES = 10
 MAX_SENTENCE_LEN = 1000
 
-VOCABULARY_PATH = '../data/vocabulary.txt'
 DATA_PATH = '/data/wangchenghao/data/app_joined_%d.pkl'
 TRAIN_PATH = '/data/wangchenghao/data/app_train_%d.pkl'
 SAVE_PATH = '/data/wangchenghao/baseline_model.zip'
