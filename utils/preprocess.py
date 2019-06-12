@@ -28,37 +28,15 @@ def shuffle_data(app):
         if other >= total_len:
             break
         if app.iloc[idx, 2] != app.iloc[other, 2]:
-            print(app.iloc[idx, 2], app.iloc[other, 2])
             jds[idx] = app.iloc[other, 1]
             jds[other] = app.iloc[idx, 1]
             labels[idx] = 0
             labels[other] = 0
-        print(jds[idx])
-        print(jds[other])
     app['label'] = labels
     del app['job_description']
     app['job_description'] = jds
     print('Done!')
-
-
-def text2vec(app):
-    total_len = len(app)
-    print('Converting words into vec')
-    summary = []
-    description = []
-    count = 0
-    for idx, row in app.iterrows():
-        count += 1
-        summary.append(embedding.sentence2vec(row[0]))
-        description.append(embedding.sentence2vec(row[1]))
-        if count % 1000 == 0:
-            sys.stdout.write('\rProcessing %d / %d' % (count, total_len))
-            sys.stdout.flush()
-    del app['candidate_summary']
-    del app['job_description']
-    app['candidate_summary'] = np.asarray(summary)
-    app['job_description'] = np.asarray(description)
-    print('\nDone!')
+    return app
 
 
 def run():
@@ -79,9 +57,28 @@ def run():
                 app.dropna(inplace=True)
                 print('Data loaded ', len(app))
                 app.reset_index(drop=True, inplace=True)
-                shuffle_data(app)
-                print(app.head(10))
-                text2vec(app)
+                app = shuffle_data(app)
+
+                # 向量化
+                total_len = len(app)
+                print('Converting words into vec')
+                summary = []
+                description = []
+                count = 0
+                for idx, row in app.iterrows():
+                    count += 1
+                    summary.append(embedding.sentence2vec(row[0]))
+                    description.append(embedding.sentence2vec(row[1]))
+                    if count % 1000 == 0:
+                        sys.stdout.write('\rProcessing %d / %d' % (count, total_len))
+                        sys.stdout.flush()
+                del app['candidate_summary']
+                del app['job_description']
+                app['candidate_summary'] = np.asarray(summary)
+                app['job_description'] = np.asarray(description)
+
+                print('\nDone!')
+                print(app.iloc[0])
                 pickle.dump(app, output_file)
                 # for offset in range(0, len(app), TRAIN_SIZE):
                 #     app_batch = app.iloc[offset:offset+TRAIN_SIZE]
