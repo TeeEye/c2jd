@@ -37,8 +37,14 @@ def run():
                     del app
                 except EOFError:
                     break
+
+    print('Filtering...')
+    for key in tencent.keys():
+        if key not in word_count or word_count[key] < MIN_TENCENT_FREQ:
+            del tencent[key]
+
     with open(WORD_COUNT_PATH, 'wb') as f:
-        pickle.dump(word_count, f)
+        pickle.dump(tencent, f)
 
     print('All done!')
 
