@@ -87,7 +87,7 @@ def run():
                     print(app_batch.iloc[0])
                     pickle.dump(app_batch, output_file)
                     del app_batch
-                    del app_batches[i]
+                    del app_batches[0]
 
             except EOFError:
                 break
