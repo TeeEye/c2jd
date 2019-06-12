@@ -78,11 +78,12 @@ def run():
                 print('Data loaded ', len(app))
                 app.reset_index(drop=True, inplace=True)
                 shuffle_data(app)
-                for offset in range(0, len(app), TRAIN_SIZE):
-                    app_batch = app.iloc[offset:offset+TRAIN_SIZE]
-                    print(app_batch.head(0))
-                    text2vec(app_batch)
-                    pickle.dump(app_batch, output_file)
+                print(app.head(10))
+                text2vec(app)
+                pickle.dump(app, output_file)
+                # for offset in range(0, len(app), TRAIN_SIZE):
+                #     app_batch = app.iloc[offset:offset+TRAIN_SIZE]
+                #
                 del app
                 break
             except EOFError:
