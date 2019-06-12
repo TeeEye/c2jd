@@ -43,16 +43,17 @@ class Solver:
             batch_x2 = torch.from_numpy(batch_x2).to(device).float()
             len_1 = torch.LongTensor(len_1).to(device)
             len_2 = torch.LongTensor(len_2).to(device)
-            batch_y = torch.from_numpy(batch_y).float().to(device)
+            batch_y = torch.from_numpy(batch_y.reshape(-1, 1)).float().to(device)
             batch_y_hat = self.model(batch_x1, batch_x2, len_1, len_2)
             loss = self.crit(batch_y_hat, batch_y)
             self.optim.zero_grad()
             loss.backward()
             self.optim.step()
-
+            pred_y = (batch_y_hat > 0.5).float()
             if epoch % self.print_every == 0 or epoch == self.n_epochs:
-                print('Training %d/%d - Loss:%.5f ...' %
-                      (epoch, self.n_epochs, torch.sum(loss.data)/batch_x1.size()[0]))
+                acc = (batch_y == pred_y).sum().item() / BATCH_SIZE
+                print('Training %d/%d - Loss:%.5f Accuracy:%.5f' %
+                      (epoch, self.n_epochs, torch.sum(loss.data)/batch_x1.size()[0], acc))
             if epoch % self.save_every == 0 or epoch == self.n_epochs:
                 torch.save(self.model, self.save_path)
                 print('Model saved')
