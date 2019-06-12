@@ -1,5 +1,3 @@
-import sys
-sys.path.append('..')
 from utils.macros import *
 import pickle
 from collections import defaultdict

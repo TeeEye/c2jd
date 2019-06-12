@@ -1,9 +1,6 @@
 """
 从训练集中取数据
 """
-
-import sys
-sys.path.append('..')
 from utils.macros import *
 import pickle
 import random
@@ -52,10 +49,10 @@ class Sampler:
     def zero_pad(self, inputs):
         result = np.zeros((len(inputs), PAD_SIZE, EMBED_DIM))
         inputs_len = []
-        for index, input in enumerate(inputs):
-            input_len = min(PAD_SIZE, len(input))
+        for index, data in enumerate(inputs):
+            input_len = min(PAD_SIZE, len(data))
             for i in range(input_len):
-                result[index, i] = input[i]
+                result[index, i] = data[i]
             inputs_len.append(input_len-1)
         return result, inputs_len
 

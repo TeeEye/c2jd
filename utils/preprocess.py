@@ -1,6 +1,3 @@
-import sys
-sys.path.append("..")
-
 import pickle
 import numpy as np
 from utils.macros import *
@@ -33,6 +30,7 @@ def text2vec(app):
     app['candidate_summary'] = np.asarray(summary)
     app['job_description'] = np.asarray(description)
     print('\nDone!')
+
 
 def run():
     # 目前只使用第一个训练数据

@@ -1,5 +1,3 @@
-import sys
-sys.path.append('..')
 from utils.macros import *
 import pickle
 import numpy as np
@@ -25,7 +23,7 @@ class Embedding:
     def sentence2vec(self, sentence):
         result = []
         for word in sentence:
-            if len(result) >= MAX_SENTENCE_LEN:
+            if len(result) >= PAD_SIZE:
                 break
             if word not in self.word2vec:
                 continue

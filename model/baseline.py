@@ -1,12 +1,13 @@
 from torch import nn
-import torch
+from utils.macros import *
 
 
 def batch_select(tensor, index):
     return tensor.gather(1, index.view(-1, 1, 1).expand(tensor.size(0), 1, tensor.size(2))).squeeze(1)
 
+
 class Baseline(nn.Module):
-    def __init__(self, hidden_size=300, embeds_dim=200):
+    def __init__(self, hidden_size=HIDDEN_DIM, embeds_dim=EMBED_DIM):
         super(Baseline, self).__init__()
         self.hidden_size = hidden_size
         self.embeds_dim = embeds_dim
@@ -41,5 +42,5 @@ class Baseline(nn.Module):
 
 
 if __name__ == '__main__':
-    b = Baseline(hidden_size=300, embeds_dim=300)
+    b = Baseline(hidden_size=300, embeds_dim=200)
     print(b)
