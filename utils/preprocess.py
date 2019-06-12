@@ -72,13 +72,21 @@ def run():
                 app['job_description'] = jds
                 print('Done!')
 
+                app_batches = []
+
                 for offset in range(0, len(app), TRAIN_SIZE):
-                    app_batch = app.iloc[offset:offset+TRAIN_SIZE]
+                    app_batches.append(app.iloc[offset:offset+TRAIN_SIZE])
+
+                del app
+
+                for i in range(len(app_batches)):
+                    app_batch = app_batches[i]
                     text2vec(app_batch)
                     print(app_batch.iloc[0])
                     pickle.dump(app_batch, output_file)
+                    del app_batch
+                    del app_batches[i]
 
-                del app
             except EOFError:
                 break
 
