@@ -4,6 +4,7 @@ from utils.macros import *
 import pickle
 from collections import defaultdict
 import jieba
+import sys
 
 
 def run():
@@ -20,7 +21,7 @@ def run():
                 break
     print('Embedding initiated!')
     word_count = defaultdict(int)
-    for i in range(8):
+    for i in range(1):
         print('Processing batch %d' % i)
         with open(DATA_PATH % i, 'rb') as f:
             while True:
@@ -28,13 +29,20 @@ def run():
                     app = pickle.load(f)
                     app = app[['candidate_summary', 'job_description']].dropna()
                     print('App batch loaded')
-                    for _, row in app.iterrows():
+                    total_len = len(app)
+                    count = 0
+                    for idx, row in app.iterrows():
+                        count += 1
                         for word in jieba.cut(row['job_description']):
                             if word in tencent:
                                 word_count[word] += 1
                         for word in jieba.cut(row['candidate_summary']):
                             if word in tencent:
                                 word_count[word] += 1
+                        if count % 1000 == 0 or count == total_len:
+                            sys.stdout.write('\rProcessing %d/%d' % (count, total_len))
+                            sys.stdout.flush()
+                    print('')
                     print('App batch processed')
                     del app
                 except EOFError:
