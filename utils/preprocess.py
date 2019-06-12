@@ -40,11 +40,13 @@ def text2vec(app):
     print('Converting words into vec')
     summary = []
     description = []
+    count = 0
     for idx, row in app.iterrows():
+        count += 1
         summary.append(embedding.sentence2vec(row[0]))
         description.append(embedding.sentence2vec(row[1]))
-        if idx % 1000 == 0:
-            sys.stdout.write('\rProcessing %d / %d' % (idx, total_len))
+        if count % 1000 == 0:
+            sys.stdout.write('\rProcessing %d / %d' % (count, total_len))
             sys.stdout.flush()
     del app['candidate_summary']
     del app['job_description']
@@ -62,7 +64,6 @@ def run():
     output_file = open(output_data_path, 'wb')
 
     with open(raw_data_path, 'rb') as f:
-        app_arr = []
         while True:
             try:
                 app = pickle.load(f)
@@ -78,6 +79,7 @@ def run():
                     text2vec(app_batch)
                     pickle.dump(app_batch, output_file)
                 del app
+                break
             except EOFError:
                 break
 
