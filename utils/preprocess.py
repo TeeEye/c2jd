@@ -80,9 +80,9 @@ def run():
 
                 # 解除引用
                 del app
-
-                for i in range(len(app_batches)):
-                    app_batch = app_batches[i]
+                batch_len = len(app_batches)
+                for i in range(batch_len):
+                    app_batch = app_batches[0]
                     text2vec(app_batch)
                     print(app_batch.iloc[0])
                     pickle.dump(app_batch, output_file)
