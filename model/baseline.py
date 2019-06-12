@@ -11,7 +11,15 @@ class Baseline(nn.Module):
         self.hidden_size = hidden_size
         self.embeds_dim = embeds_dim
         self.lstm = nn.LSTM(self.embeds_dim, self.hidden_size, batch_first=True, bidirectional=True)
-        self.fc = nn.Linear(self.hidden_size * 4, 1)
+        self.fc = torch.nn.Sequential(
+            nn.Linear(self.hidden_size * 4, self.hidden_size * 2),
+            nn.Dropout(),
+            nn.ELU(),
+            nn.Linear(self.hidden_size * 2, self.hidden_size * 1),
+            nn.Dropout(),
+            nn.ELU(),
+            nn.Linear(self.hidden_size * 1, 1)
+        )
 
     def forward(self, *inputs):
         # batch_size * seq_len
