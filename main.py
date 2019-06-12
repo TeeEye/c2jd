@@ -6,5 +6,5 @@ if __name__ == '__main__':
     model = Baseline()
     solver = Solver(model)
     solver.solve()
-    # solver.evaluate()
+    solver.evaluate()
     print('Baseline End.')

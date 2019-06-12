@@ -66,11 +66,15 @@ class Solver:
         print('Start evaluating...')
         self.model.eval()
         # 获取测试集
-        test_x, test_y = self.sampler.test_set()
-        test_x = torch.FloatTensor(test_x).to(device)
-        # 预测
-        pred_y = (self.model.forward(test_x).data.numpy() >= 0.5).astype(np.int32)
-        # 获取准确率
-        accuracy = np.sum(pred_y == test_y) / test_y.shape[0]
-        print('Test accuracy: %.3f' % accuracy)
+        batch_x1, batch_x2, batch_y, len_1, len_2 = self.sampler.next_batch()
+        batch_x1 = torch.from_numpy(batch_x1).to(device).float()
+        batch_x2 = torch.from_numpy(batch_x2).to(device).float()
+        len_1 = torch.LongTensor(len_1).to(device)
+        len_2 = torch.LongTensor(len_2).to(device)
+        batch_y = torch.from_numpy(batch_y.reshape(-1, 1)).float().to(device)
+        batch_y_hat = self.model(batch_x1, batch_x2, len_1, len_2)
+        pred_y = (batch_y_hat > 0.5).float()
+        accuracy = (batch_y == pred_y).sum().item() / batch_y.size()[0]
+        print('Test accuracy: %.5f' % accuracy)
+        self.model.train()
 
