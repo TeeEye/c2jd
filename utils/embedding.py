@@ -25,6 +25,8 @@ class Embedding:
     def sentence2vec(self, sentence):
         result = []
         for word in sentence:
+            if len(result) >= MAX_SENTENCE_LEN:
+                break
             if word not in self.word2vec:
                 continue
             result.append(self.word2vec[word])
