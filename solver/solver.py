@@ -38,11 +38,6 @@ class Solver:
         self.model.train()
         for epoch in range(1, self.n_epochs+1):
             batch_x1, batch_x2, batch_y, len_1, len_2 = self.sampler.next_batch()
-            batch_x1 = torch.from_numpy(batch_x1).to(device).float()
-            batch_x2 = torch.from_numpy(batch_x2).to(device).float()
-            len_1 = torch.LongTensor(len_1).to(device)
-            len_2 = torch.LongTensor(len_2).to(device)
-            batch_y = torch.from_numpy(batch_y.reshape(-1, 1)).float().to(device)
             batch_y_hat = self.model(batch_x1, batch_x2, len_1, len_2)
             loss = self.crit(batch_y_hat, batch_y)
             self.optim.zero_grad()
