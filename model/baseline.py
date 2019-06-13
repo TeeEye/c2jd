@@ -29,6 +29,8 @@ class Baseline(nn.Module):
         len1, len2 = inputs[2], inputs[3]
         o1 = run_rnn(self.lstm, x1, len1)
         o2 = run_rnn(self.lstm, x2, len2)
+        o1 = batch_select(o1, len1-1)
+        o2 = batch_select(o2, len2-1)
         x = torch.cat([o1, o2], 1)
 
         # Classifier

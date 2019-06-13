@@ -21,5 +21,7 @@ def run_rnn(rnn, data, lens):
     _, desorted_indices = torch.sort(indices)
     data = data.index_select(0, indices)
     packed = nn.utils.rnn.pack_padded_sequence(data, sorted_lens, batch_first=True)
-    _, (res, _) = rnn(packed)
+    res, _ = rnn(packed)
+    padded, _ = nn.utils.rnn.pad_packed_sequence(res, batch_first=True, total_length=data.shape[1])
     return res.index_select(0, desorted_indices).contiguous()
+
