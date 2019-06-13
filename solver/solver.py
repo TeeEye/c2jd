@@ -46,7 +46,7 @@ class Solver:
             self.optim.step()
             pred_y = (batch_y_hat > 0.5).float()
             if epoch % self.print_every == 0 or epoch == self.n_epochs:
-                acc = (batch_y == pred_y).sum().item() / BATCH_SIZE
+                acc = (batch_y == pred_y).sum().item() / batch_y.size()[0]
                 print('Training %d/%d - Loss:%.5f Accuracy:%.5f' %
                       (epoch, self.n_epochs, torch.sum(loss.data)/batch_x1.size()[0], acc))
             if epoch % self.save_every == 0 or epoch == self.n_epochs:

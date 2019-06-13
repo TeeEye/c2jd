@@ -19,6 +19,7 @@ HIDDEN_DIM = 300
 TRAIN_TEST_SPLIT = 0.9
 TRAIN_DATA_REUSE_TIMES = 10  # sampler.sampler 每次 load 的复用次数
 MIN_TENCENT_FREQ = 10  # 用于剔除腾讯词嵌入的最低词频
+MIN_AVAILABLE_SENTENCE_LEN = 10
 
 DATA_PATH = '/data/wangchenghao/data/app_joined_%d.pkl'
 TRAIN_PATH = '/data/wangchenghao/data/app_train_%d.pkl'

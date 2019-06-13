@@ -23,5 +23,10 @@ def run_rnn(rnn, data, lens):
     packed = nn.utils.rnn.pack_padded_sequence(data, sorted_lens, batch_first=True)
     res, _ = rnn(packed)
     padded, _ = nn.utils.rnn.pad_packed_sequence(res, batch_first=True, total_length=data.shape[1])
-    return res.index_select(0, desorted_indices).contiguous()
+    res = padded.index_select(0, desorted_indices).contiguous()
+    return batch_select(res, lens-1)
+
+
+def batch_select(tensor, index):
+    return tensor.gather(1, index.view(-1, 1, 1).expand(tensor.size(0), 1, tensor.size(2))).squeeze(1)
 

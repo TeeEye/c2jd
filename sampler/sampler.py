@@ -46,10 +46,10 @@ class Sampler:
             cs = row['candidate_summary']
             jd = row['job_description']
             if cs is None or jd is None or \
-                    cs.shape[0] == 0 or jd.shape[0] == 0:
+                    cs.shape[0] < MIN_AVAILABLE_SENTENCE_LEN or jd.shape[0] < MIN_AVAILABLE_SENTENCE_LEN:
                 continue
-            summary.append(row['candidate_summary'])
-            description.append(row['job_description'])
+            summary.append(cs)
+            description.append(jd)
             label.append(row['label'])
         self.summary, self.len1 = zero_pad(summary)
         self.description, self.len2 = zero_pad(description)
