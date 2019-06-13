@@ -63,6 +63,8 @@ def run():
                     jds.append(row['job_description'])
 
                 for idx, row in app.iterrows():
+                    if idx % 2 == 0:
+                        continue
                     other = idx + half_len
                     if other >= total_len:
                         break
