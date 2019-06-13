@@ -38,8 +38,10 @@ class Sampler:
         description = []
         label = []
         for _, row in data.iterrows():
-            if row['candidate_summary'] is None or row['job_description'] is None or \
-                    row['candidate_summary'].shape[0] == 0 or row['job_description'].shape[0] == 0:
+            cs = row['candidate_summary']
+            jd = row['job_description']
+            if cs is None or jd is None or \
+                    cs.shape[0] == 0 or jd.shape[0] == 0:
                 continue
             summary.append(row['candidate_summary'])
             description.append(row['job_description'])
