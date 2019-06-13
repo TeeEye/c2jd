@@ -38,7 +38,6 @@ class Solver:
         self.model.train()
         for epoch in range(1, self.n_epochs+1):
             batch_x1, batch_x2, batch_y, len_1, len_2 = self.sampler.next_batch()
-
             batch_y_hat = self.model(batch_x1, batch_x2, len_1, len_2)
             loss = self.crit(batch_y_hat, batch_y)
             self.optim.zero_grad()
@@ -46,27 +45,18 @@ class Solver:
             self.optim.step()
             pred_y = (batch_y_hat > 0.5).float()
             if epoch % self.print_every == 0 or epoch == self.n_epochs:
-                acc = (batch_y == pred_y).sum().item() / batch_y.size()[0]
+                accuracy = (batch_y == pred_y).sum().item() / batch_y.size()[0]
                 print('Training %d/%d - Loss:%.5f Accuracy:%.5f' %
-                      (epoch, self.n_epochs, torch.sum(loss.data)/batch_x1.size()[0], acc))
+                      (epoch, self.n_epochs, torch.sum(loss.data)/batch_x1.size()[0], accuracy))
             if epoch % self.save_every == 0 or epoch == self.n_epochs:
                 torch.save(self.model, self.save_path)
                 print('Model saved')
         print('Training finished!')
 
     def evaluate(self):
-        """
-        验证模型在测试集上的性能
-        """
         print('Start evaluating...')
         self.model.eval()
-        # 获取测试集
         batch_x1, batch_x2, batch_y, len_1, len_2 = self.sampler.next_batch()
-        batch_x1 = torch.from_numpy(batch_x1).to(device).float()
-        batch_x2 = torch.from_numpy(batch_x2).to(device).float()
-        len_1 = torch.LongTensor(len_1).to(device)
-        len_2 = torch.LongTensor(len_2).to(device)
-        batch_y = torch.from_numpy(batch_y.reshape(-1, 1)).float().to(device)
         batch_y_hat = self.model(batch_x1, batch_x2, len_1, len_2)
         pred_y = (batch_y_hat > 0.5).float()
         accuracy = (batch_y == pred_y).sum().item() / batch_y.size()[0]
