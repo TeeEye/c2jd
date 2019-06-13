@@ -1,5 +1,6 @@
 from torch import nn
 from utils.macros import *
+from utils.rnn import run_rnn
 
 
 def batch_select(tensor, index):
@@ -26,10 +27,8 @@ class Baseline(nn.Module):
         # Encoder
         x1, x2 = inputs[0], inputs[1]
         len1, len2 = inputs[2], inputs[3]
-        o1, _ = self.lstm(x1)
-        o2, _ = self.lstm(x2)
-        o1 = batch_select(o1, len1)
-        o2 = batch_select(o2, len2)
+        o1, _ = run_rnn(self.lstm, x1, len1)
+        o2, _ = run_rnn(self.lstm, x2, len2)
         x = torch.cat([o1, o2], 1)
 
         # Classifier

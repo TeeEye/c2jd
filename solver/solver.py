@@ -38,6 +38,7 @@ class Solver:
         self.model.train()
         for epoch in range(1, self.n_epochs+1):
             batch_x1, batch_x2, batch_y, len_1, len_2 = self.sampler.next_batch()
+
             batch_y_hat = self.model(batch_x1, batch_x2, len_1, len_2)
             loss = self.crit(batch_y_hat, batch_y)
             self.optim.zero_grad()
