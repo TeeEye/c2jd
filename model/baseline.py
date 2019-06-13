@@ -27,8 +27,8 @@ class Baseline(nn.Module):
         # Encoder
         x1, x2 = inputs[0], inputs[1]
         len1, len2 = inputs[2], inputs[3]
-        o1, _ = run_rnn(self.lstm, x1, len1)
-        o2, _ = run_rnn(self.lstm, x2, len2)
+        o1 = run_rnn(self.lstm, x1, len1)
+        o2 = run_rnn(self.lstm, x2, len2)
         x = torch.cat([o1, o2], 1)
 
         # Classifier
