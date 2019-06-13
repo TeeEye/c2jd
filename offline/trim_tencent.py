@@ -4,7 +4,6 @@ from collections import defaultdict
 import jieba
 import sys
 
-
 def run():
     print('Loading tencent embedding...')
     tencent = {}
@@ -18,6 +17,7 @@ def run():
             except EOFError:
                 break
     print('Embedding initiated!')
+
     word_count = defaultdict(int)
     for i in range(1):
         print('Processing batch %d' % i)
@@ -47,11 +47,15 @@ def run():
                     break
 
     print('Filtering...')
+    key_to_delete = []
     for key in tencent.keys():
         if key not in word_count or word_count[key] < MIN_TENCENT_FREQ:
-            del tencent[key]
+            key_to_delete.append(key)
 
-    with open(WORD_COUNT_PATH, 'wb') as f:
+    for key in key_to_delete:
+        del tencent[key]
+
+    with open(TRIMMED_EMBEDDING_PATH, 'wb') as f:
         pickle.dump(tencent, f)
 
     print('All done!')

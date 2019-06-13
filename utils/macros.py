@@ -23,5 +23,5 @@ MIN_TENCENT_FREQ = 10  # 用于剔除腾讯词嵌入的最低词频
 DATA_PATH = '/data/wangchenghao/data/app_joined_%d.pkl'
 TRAIN_PATH = '/data/wangchenghao/data/app_train_%d.pkl'
 SAVE_PATH = '/data/wangchenghao/baseline_model.zip'
-EMBEDDING_PATH = '/data/wangchenghao/tencent_embedding.pkl'
-WORD_COUNT_PATH = '/data/wangchenghao/tencent_trimmed.pkl'
+EMBEDDING_PATH = '/data/wangchenghao/tencent_trimmed.pkl'
+TRIMMED_EMBEDDING_PATH = '/data/wangchenghao/tencent_trimmed.pkl'
