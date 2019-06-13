@@ -28,8 +28,10 @@ def text2vec(app):
         if count % 1000 == 0 or count == total_len:
             sys.stdout.write('\rProcessing %d / %d' % (count, total_len))
             sys.stdout.flush()
-    app['candidate_summary'] = np.asarray(summary)
-    app['job_description'] = np.asarray(description)
+    app['candidate_summary'] = np.array(summary)
+    app['job_description'] = np.array(description)
+    del summary
+    del description
     print('\nDone!')
 
 
