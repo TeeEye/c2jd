@@ -6,7 +6,7 @@ from utils.macros import *
 
 
 class Solver:
-    def __init__(self, model, n_epochs=1000, lr=1e-4,
+    def __init__(self, model, n_epochs=10000, lr=1e-4,
                  print_every=1, save_every=100, save_path=SAVE_PATH):
         """
         :param model: 模型
