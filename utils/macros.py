@@ -11,7 +11,7 @@ DEBUG_MODE = True  # if True, 会打印一些调试信息
 UNK_TOKEN = 0
 UNK_STR = '__UNK__'
 
-BATCH_SIZE = 16
+BATCH_SIZE = 128
 TRAIN_SIZE = 1000  # utils.preprocess 每次向量化的大小
 PAD_SIZE = 500  # 句子词向量的最大长度, 统计分布上约为 80%
 EMBED_DIM = 200  # 腾讯词嵌入的维度
@@ -25,3 +25,4 @@ TRAIN_PATH = '/data/wangchenghao/data/app_train_%d.pkl'
 SAVE_PATH = '/data/wangchenghao/baseline_model.zip'
 EMBEDDING_PATH = '/data/wangchenghao/tencent_trimmed.pkl'
 TRIMMED_EMBEDDING_PATH = '/data/wangchenghao/tencent_trimmed.pkl'
+DATA_PATH = '/Users/wangchenghao1103/Desktop/app_demo_%d.pkl'
